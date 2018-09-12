@@ -61,54 +61,10 @@
 			},
 				function (data, textStatus) {
 
-					console.log(data);
+					// console.log(data);
 					var data = JSON.parse(data)
-					console.log(typeof data);
-					console.log(data);
-					// data = [{
-					// 	"id": "5418",
-					// 	"Name": "河北定州上不去连锁店",
-					// 	"Money": "¥1000",
-					// 	"payment_method": "招行银行",
-					// 	"Time": "2017-09-19 09:59",
-					// 	"User": "苏三"
-					// }, {
-					// 	"id": "5418",
-					// 	"Name": "河北定州上不去连锁店",
-					// 	"Money": "¥1000",
-					// 	"payment_method": "近点",
-					// 	"Time": "2017-09-19 09:59",
-					// 	"User": "苏三"
-					// }, {
-					// 	"id": 5418,
-					// 	"Name": "河北定州上不去连锁店",
-					// 	"Money": "¥1000",
-					// 	"payment_method": "招行银行",
-					// 	"Time": "2017-09-19 09:59",
-					// 	"User": "苏三"
-					// }, {
-					// 	"id": 5418,
-					// 	"Name": "河北定州上不去连锁店",
-					// 	"Money": "¥1000",
-					// 	"payment_method": "招行银行",
-					// 	"Time": "2017-09-19 09:59",
-					// 	"User": "苏三"
-					// }, {
-					// 	"id": 5418,
-					// 	"Name": "河北定州上不去连锁店",
-					// 	"Money": "¥1000",
-					// 	"payment_method": "微信",
-					// 	"Time": "2017-09-19 09:59",
-					// 	"User": "苏三"
-					// }, {
-					// 	"id": 5418,
-					// 	"Name": "河北定州上不去连锁店",
-					// 	"Money": "¥1000",
-					// 	"payment_method": "招行银行",
-					// 	"Time": "2017-09-19 09:59",
-					// 	"User": "苏三"
-					// }
-					// ]
+					// console.log(typeof data);
+					// console.log(data);
 					var gridData = {
 						"form.paginate.pageNo": 1,
 						"form.paginate.totalRows": 13,
@@ -152,8 +108,14 @@
 							align: 'left',
 							width: 100,
 							render: function (rowdata, rowindex, value, column) {
+								var index = rowdata["id"];
+								//console.log(rowdata["id"]);
+								// console.log(rowindex);
+								// console.log(value);
+								// console.log(column)							
 								var mainCon = $('<div></div>');
-								var con = $('<span class="operation_add" onclick="details()" style="float:none;">查看</span>');
+								//var con = $('<span class="operation_add" onclick=details(" + rowdata[\"id\"] + ") style="float:none;">查看</span>');
+								var con = $('<span class="operation_add" onclick=details(' + index + ') style="float:none;">查看</span>');
 								mainCon.append(con);
 								return mainCon.html();
 							}
@@ -184,8 +146,10 @@
 
 		}
 
-		function details() {
-			window.location = 'oa_67.html'
+		function details(index) {
+			console.log("src page : index = " + index);
+			window.location = 'oa_65-2.html?id=' + index;
+			// window.location = 'oa_67.html'
 		}
 	</script>
 </body>
