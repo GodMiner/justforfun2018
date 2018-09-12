@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>无标题文档</title>
+	<!--框架必需start-->
+	<script type="text/javascript" src="../../libs/js/jquery.js"></script>
+	<script type="text/javascript" src="../../libs/js/language/cn.js"></script>
+	<script type="text/javascript" src="../../libs/js/framework.js"></script>
+	<link href="../../libs/css/import_basic.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" id="skin" prePath="../../" />
+	<link rel="stylesheet" type="text/css" id="customSkin" />
+	<!--框架必需end-->
+	<link rel="stylesheet" type="text/css" href="style/style.css" />
+
+	<script src="../../libs/js/table/quiGrid.js" type="text/javascript"></script>
+
+
+	<!--基本选项卡start-->
+	<script type="text/javascript" src="../../libs/js/nav/basicTabModern.js"></script>
+	<!--基本选项卡end-->
+
+	<style type="text/css">
+		/*body {
+				background: #fff;
+			}*/
+	</style>
+</head>
+
+<body>
+	<div class="page_content">
+		<div class="demo_operation">
+			<input type="button" value="收付款录入" class="primary" onclick="window.location='oa_66.html'" />
+		</div>
+		<div class="infoCard infoCard2">
+			<div class="basicTabModern" id="basicTabModern">
+				<div name="门店收款" style="width:100%;height:auto;">
+					<div class="attendance_list_operation">
+						<table border="0" cellspacing="0" cellpadding="0" class="search_content">
+							<tr>
+								<td>搜索：</td>
+								<td><input type="text" /></td>
+								<td><input type="button" value="搜索" class="" /></td>
+							</tr>
+						</table>
+						<div class="clear"></div>
+					</div>
+					<div id="dataBasic"></div>
+				</div>
+				<div name="厂商付款" style="width:100%;height:auto;">
+					<div class="attendance_list_operation">
+						<table border="0" cellspacing="0" cellpadding="0" class="search_content">
+							<tr>
+								<td>搜索：</td>
+								<td><input type="text" /></td>
+								<td><input type="button" value="搜索" class="" /></td>
+							</tr>
+						</table>
+						<div class="clear"></div>
+					</div>
+					<div id="dataBasic2"></div>
+				</div>
+			</div>
+			<!--<div class="title">
+					<span>仓位列表</span>
+				</div>-->
+
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+		var url = location.search;
+		console.log("new page id : " + location.search);
+
+		var grid = null;
+		var grid2 = null;
+		//数据表格使用
+		var gridData = null;
+
+
+		function initComplete() {
+
+			console.log(gridData);
+
+			grid = $("#dataBasic").quiGrid({
+				columns: [{
+					display: '编号',
+					name: 'id',
+					width: "40%"
+				}, {
+					display: '电话',
+					name: 'tel',
+					width: "60%"
+				}
+				],
+				data: gridData,
+				sortName: 'id',
+				rownumbers: false,
+				checkbox: false,
+				height: '100%',
+				width: "100%",
+				pageSize: 10,
+				percentWidthMode: true,
+				onAfterShowData: onAfterShowData
+
+			});
+			grid2 = $("#dataBasic2").quiGrid({
+				columns: [{
+					display: '编号',
+					name: 'id',
+					width: "40%",
+					cellClick: true
+				}, {
+					display: '名字',
+					name: 'person',
+					width: "60%"
+				}
+				],
+				data: gridData,
+				sortName: 'id',
+				rownumbers: false,
+				checkbox: false,
+				height: '100%',
+				width: "100%",
+				pageSize: 10,
+				percentWidthMode: true,
+				onAfterShowData: onAfterShowData
+
+			});
+		}
+
+		$("#basicTabModern").bind("actived", function (e, idx) {
+			if (idx == 0) {
+				getData(0);
+				setData();
+				grid.resetHeight();
+				grid.resetWidth();
+			}
+			else if (idx == 1) {
+				getData(1);
+				setData();
+				grid2.resetHeight();
+				grid2.resetWidth();
+			}
+		})
+
+
+		function setData() {
+			console.log(gridData);
+
+			grid = $("#dataBasic").quiGrid({
+				columns: [{
+					display: '编号',
+					name: 'id',
+					width: "40%"
+				}, {
+					display: '电话',
+					name: 'tel',
+					width: "60%"
+				}
+				],
+				data: gridData,
+				sortName: 'id',
+				rownumbers: false,
+				checkbox: false,
+				height: '100%',
+				width: "100%",
+				pageSize: 10,
+				percentWidthMode: true,
+				onAfterShowData: onAfterShowData
+
+			});
+			grid2 = $("#dataBasic2").quiGrid({
+				columns: [{
+					display: '编号',
+					name: 'id',
+					width: "40%",
+					cellClick: true
+				}, {
+					display: '名字',
+					name: 'person',
+					width: "60%"
+				}
+				],
+				data: gridData,
+				sortName: 'id',
+				rownumbers: false,
+				checkbox: false,
+				height: '100%',
+				width: "100%",
+				pageSize: 10,
+				percentWidthMode: true,
+				onAfterShowData: onAfterShowData
+
+			});
+		}
+		function getData(col) {
+			$.ajaxSettings.async = false;
+			var dsturl = "http://127.0.0.1/phonesystem/backend/getdata.php" + url + "&col=" + col;
+			console.log(dsturl);
+			$.get(dsturl, {
+
+			},
+				function (data, textStatus) {
+					console.log(typeof data);
+					// console.log(data);
+					var data = JSON.parse(data)
+					// console.log(typeof data);
+					console.log(data);
+					gridData = {
+						"form.paginate.pageNo": 1,
+						"form.paginate.totalRows": 13,
+						"rows": data
+					}
+				});
+		}
+
+		function onAfterShowData(data) {
+
+		}
+
+		function details() {
+			window.location = 'oa_67.html'
+		}
+	</script>
+</body>
+
+</html>
