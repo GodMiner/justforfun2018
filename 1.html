@@ -18,7 +18,7 @@
 
 
 	<!--基本选项卡start-->
-	<script type="text/javascript" src="../../libs/js/nav/basicTabModern.js"></script>
+	<!-- <script type="text/javascript" src="../../libs/js/nav/basicTabModern.js"></script> -->
 	<!--基本选项卡end-->
 
 	<style type="text/css">
@@ -30,9 +30,9 @@
 
 <body>
 	<div class="page_content">
-		<div class="demo_operation">
-			<input type="button" value="仓库录入" class="primary" onclick="window.location='oa_62.html'"/>
-		</div>
+		<!-- <div class="demo_operation">
+			<input type="button" value="仓库录入" class="primary" onclick="window.location='oa_62.html'" />
+		</div> -->
 		<div class="infoCard infoCard2">
 			<div class="title">
 				<span>仓库列表</span>
@@ -47,21 +47,16 @@
 				</table>
 				<div class="clear"></div>
 			</div>
-			<div id="dataBasic"></div>
+			<div id="dataPhone"></div>
 		</div>
 	</div>
 
 	<script type="text/javascript">
 
 		function initComplete() {
-
 			//$.ajaxSettings.async = false;
-			$.get("http://127.0.0.1/phonesystem/backend/getinfo.php", {
-
-			},
+			$.get("http://127.0.0.1/phonesystem/backend/getinfo.php", {},
 				function (data, textStatus) {
-
-					// console.log(data);
 					var data = JSON.parse(data)
 					// console.log(typeof data);
 					// console.log(data);
@@ -70,60 +65,70 @@
 						"form.paginate.totalRows": 13,
 						"rows": data
 					}
-
-
 					var grid = null;
-					grid = $("#dataBasic").quiGrid({
-						columns: [{
-							display: '编号',
-							name: 'id',
+
+					grid = $("#dataPhone").quiGrid({
+						columns: [ {
+							display: '手机Id',
+							name: 'deviceid',
 							width: "10%"
 						}, {
-							display: '门店名称',
-							name: 'Name',
-							width: "30%"
+							display: 'ip',
+							name: 'ip',
+							width: "15%"
 						}, {
-							display: '金额',
-							name: 'Money',
-							width: "20%"
+							display: '城市',
+							name: 'city',
+							width: "15%"
 						}, {
-							display: '收款方式',
-							name: 'payment_method',
-							width: "20%",
+							display: '生产厂商',
+							name: 'manf',
+							width: "15%"
+						}, {
+							display: '型号',
+							name: 'model',
+							width: "15%"
+						}, {
+							display: '版本',
+							name: 'version',
+							width: "5%"
+						}, {
+							display: '上次上线时间',
+							name: 'lastlogintime',
+							width: "15%"
+						}, {
+							display: '是否在线',
+							name: 'isconnected',
+							width: "5%",
 							render: function (rowdata, rowindex, value, column) {
-								return "招行银行" == value ? "<font color='#65BD77'>" + value + "</font>" : "<font color='#FA8C76'>" + value + "</font>";
+								return "1" == value ? "<font color='#65BD77'>" + "是" + "</font>" : "<font color='#FA8C76'>" + "否" + "</font>";
 							}
 						}, {
-							display: '录入时间',
-							name: 'Time',
-							width: "10%"
+							display: '是否更新',
+							name: 'isdatarenew',
+							width: "5%",
+							render: function (rowdata, rowindex, value, column) {
+								return "1" == value ? "<font color='#65BD77'>" + "是" + "</font>" : "<font color='#FA8C76'>" + "否" + "</font>";
+							}
 						}, {
-							display: '录入人',
-							name: 'User',
-							width: "10%"
-						},
-						{
 							display: '操作',
 							name: 'name',
 							align: 'left',
 							width: 100,
 							render: function (rowdata, rowindex, value, column) {
-								var index = rowdata["id"];
-								//console.log(rowdata["id"]);
-								// console.log(rowindex);
-								// console.log(value);
-								// console.log(column)							
+								console.log(rowdata['deviceid'])
+								var deviceid = rowdata['deviceid'];
 								var mainCon = $('<div></div>');
 								//var con = $('<span class="operation_add" onclick=details(" + rowdata[\"id\"] + ") style="float:none;">查看</span>');
-								var con = $('<span class="operation_add" onclick=details(' + index + ') style="float:none;">查看</span>');
+								var con = $('<span class="operation_add" onclick=details(\'' + deviceid + '\') style="float:none;">查看</span>');
 								mainCon.append(con);
 								return mainCon.html();
 							}
 						}
 						],
 						data: gridData,
-						sortName: 'id',
-						rownumbers: false,
+						sortName: 'deviceid',
+						rownumbers: true,
 						checkbox: false,
 						height: '100%',
 						width: "100%",
@@ -146,9 +151,10 @@
 
 		}
 
-		function details(index) {
-			console.log("src page : index = " + index);
-			window.location = 'oa_65-2.html?id=' + index;
+		function details(deviceid) {
+			console.log("enter details");
+			console.log("src page : deviceid = " + deviceid);
+			window.location = 'oa_65-2.html?deviceid=' + deviceid;
 			// window.location = 'oa_67.html'
 		}
 	</script>
