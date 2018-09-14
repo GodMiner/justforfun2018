@@ -52,8 +52,8 @@ $database = new Medoo([
 // ]);
 
 
-$datas = $database->select("datatest",
-["id","Name", "Money", "payment_method", "Time", "User"]
+$datas = $database->select("phoneinfo",
+["deviceid","ip", "city", "manf", "model", "version","lastlogintime","isconnected","isdatarenew"]
 );
 
 #var_dump($datas);
