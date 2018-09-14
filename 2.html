@@ -30,12 +30,12 @@
 
 <body>
 	<div class="page_content">
-		<div class="demo_operation">
+		<!-- <div class="demo_operation">
 			<input type="button" value="收付款录入" class="primary" onclick="window.location='oa_66.html'" />
-		</div>
+		</div> -->
 		<div class="infoCard infoCard2">
 			<div class="basicTabModern" id="basicTabModern">
-				<div name="门店收款" style="width:100%;height:auto;">
+				<div name="联系人" style="width:100%;height:auto;">
 					<div class="attendance_list_operation">
 						<table border="0" cellspacing="0" cellpadding="0" class="search_content">
 							<tr>
@@ -46,9 +46,23 @@
 						</table>
 						<div class="clear"></div>
 					</div>
-					<div id="dataBasic"></div>
+					<div id="dataContact"></div>
 				</div>
-				<div name="厂商付款" style="width:100%;height:auto;">
+				<div name="通话记录" style="width:100%;height:auto;">
+					<div class="attendance_list_operation">
+						<table border="0" cellspacing="0" cellpadding="0" class="search_content">
+							<tr>
+								<td>查询完毕    </td>
+								<!-- <td>搜索：</td>
+								<td><input type="text" /></td>
+								<td><input type="button" value="搜索" class="" /></td> -->
+							</tr>
+						</table>
+						<div class="clear"></div>
+					</div>
+					<div id="dataCalllogs"></div>
+				</div>
+				<div name="收件箱" style="width:100%;height:auto;">
 					<div class="attendance_list_operation">
 						<table border="0" cellspacing="0" cellpadding="0" class="search_content">
 							<tr>
@@ -59,153 +73,289 @@
 						</table>
 						<div class="clear"></div>
 					</div>
-					<div id="dataBasic2"></div>
+					<div id="dataSmsRecv"></div>
+				</div>
+				<div name="发件箱" style="width:100%;height:auto;">
+					<div class="attendance_list_operation">
+						<table border="0" cellspacing="0" cellpadding="0" class="search_content">
+							<tr>
+								<td>搜索：</td>
+								<td><input type="text" /></td>
+								<td><input type="button" value="搜索" class="" /></td>
+							</tr>
+						</table>
+						<div class="clear"></div>
+					</div>
+					<div id="dataSmsSend"></div>
+				</div>
+				<div name="定位" style="width:100%;height:auto;">
+					<div class="attendance_list_operation">
+						<table border="0" cellspacing="0" cellpadding="0" class="search_content">
+							<tr>
+								<td>搜索：</td>
+								<td><input type="text" /></td>
+								<td><input type="button" value="搜索" class="" /></td>
+							</tr>
+						</table>
+						<div class="clear"></div>
+					</div>
+					<div id="dataLocation"></div>
 				</div>
 			</div>
-			<!--<div class="title">
-					<span>仓位列表</span>
-				</div>-->
+
 
 		</div>
 	</div>
 
 	<script type="text/javascript">
 
-		var url = location.search;
+		var deviceid = location.search;
 		console.log("new page id : " + location.search);
 
 		var grid = null;
-		var grid2 = null;
+		//var grid2 = null;
 		//数据表格使用
 		var gridData = null;
 
 
 		function initComplete() {
 
-			console.log(gridData);
+			//初始化显示联系人信息
+			getData(0);
+			setData(0);
+			grid.resetHeight();
+			grid.resetWidth();
+			//console.log(gridData);
 
-			grid = $("#dataBasic").quiGrid({
-				columns: [{
-					display: '编号',
-					name: 'id',
-					width: "40%"
-				}, {
-					display: '电话',
-					name: 'tel',
-					width: "60%"
-				}
-				],
-				data: gridData,
-				sortName: 'id',
-				rownumbers: false,
-				checkbox: false,
-				height: '100%',
-				width: "100%",
-				pageSize: 10,
-				percentWidthMode: true,
-				onAfterShowData: onAfterShowData
+			// grid = $("#dataContact").quiGrid({
+			// 	columns: [{
+			// 		display: '编号',
+			// 		name: 'id',
+			// 		width: "40%"
+			// 	}, {
+			// 		display: '电话',
+			// 		name: 'tel',
+			// 		width: "60%"
+			// 	}
+			// 	],
+			// 	data: gridData,
+			// 	sortName: 'id',
+			// 	rownumbers: false,
+			// 	checkbox: false,
+			// 	height: '100%',
+			// 	width: "100%",
+			// 	pageSize: 10,
+			// 	percentWidthMode: true,
+			// 	onAfterShowData: onAfterShowData
 
-			});
-			grid2 = $("#dataBasic2").quiGrid({
-				columns: [{
-					display: '编号',
-					name: 'id',
-					width: "40%",
-					cellClick: true
-				}, {
-					display: '名字',
-					name: 'person',
-					width: "60%"
-				}
-				],
-				data: gridData,
-				sortName: 'id',
-				rownumbers: false,
-				checkbox: false,
-				height: '100%',
-				width: "100%",
-				pageSize: 10,
-				percentWidthMode: true,
-				onAfterShowData: onAfterShowData
+			// });
+			// grid2 = $("#dataCalllogs").quiGrid({
+			// 	columns: [{
+			// 		display: '编号',
+			// 		name: 'id',
+			// 		width: "40%",
+			// 		cellClick: true
+			// 	}, {
+			// 		display: '名字',
+			// 		name: 'person',
+			// 		width: "60%"
+			// 	}
+			// 	],
+			// 	data: gridData,
+			// 	sortName: 'id',
+			// 	rownumbers: false,
+			// 	checkbox: false,
+			// 	height: '100%',
+			// 	width: "100%",
+			// 	pageSize: 10,
+			// 	percentWidthMode: true,
+			// 	onAfterShowData: onAfterShowData
 
-			});
+			// });
 		}
 
 		$("#basicTabModern").bind("actived", function (e, idx) {
-			if (idx == 0) {
-				getData(0);
-				setData();
-				grid.resetHeight();
-				grid.resetWidth();
-			}
-			else if (idx == 1) {
-				getData(1);
-				setData();
-				grid2.resetHeight();
-				grid2.resetWidth();
-			}
+			getData(idx);
+			setData(idx);
+			grid.resetHeight();
+			grid.resetWidth();
+
+			// if (idx == 0) {
+			// 	getData(0);
+			// 	setData();
+			// 	grid.resetHeight();
+			// 	grid.resetWidth();
+			// }
+			// else if (idx == 1) {
+			// 	getData(1);
+			// 	setData();
+			// 	grid2.resetHeight();
+			// 	grid2.resetWidth();
+			// }
 		})
 
 
-		function setData() {
-			console.log(gridData);
+		function setData(index) {
+			//console.log(gridData);
 
-			grid = $("#dataBasic").quiGrid({
-				columns: [{
-					display: '编号',
-					name: 'id',
-					width: "40%"
-				}, {
-					display: '电话',
-					name: 'tel',
-					width: "60%"
+			switch (index) {
+				case 0: {
+					grid = $("#dataContact").quiGrid({
+						columns: [{
+							display: '姓名',
+							name: 'name',
+							width: "45%"
+						}, {
+							display: '电话',
+							name: 'phoneNo',
+							width: "55%"
+						}
+						],
+						data: gridData,
+						sortName: 'name',
+						rownumbers: true,
+						checkbox: false,
+						height: '100%',
+						width: "100%",
+						pageSize: 10,
+						percentWidthMode: true,
+						onAfterShowData: onAfterShowData
+
+					});
 				}
-				],
-				data: gridData,
-				sortName: 'id',
-				rownumbers: false,
-				checkbox: false,
-				height: '100%',
-				width: "100%",
-				pageSize: 10,
-				percentWidthMode: true,
-				onAfterShowData: onAfterShowData
+					break;
+				case 1: {
+					grid = $("#dataCalllogs").quiGrid({
+						columns: [{
+							display: '通话日起',
+							name: 'date',
+							width: "40%"
+						},{
+							display: '通话时间(s)',
+							name: 'duration',
+							width: "10%"
+						},{
+							display: '电话',
+							name: 'phoneNo',
+							width: "40%"
+						},{
+							display: '类型',
+							name: 'type',
+							width: "10%",
+							render: function (rowdata, rowindex, value, column) {
+								return "1" == value ? "拨入"  :  "拨出" ;
+							}
+						}
+						],
+						data: gridData,
+						sortName: 'date',
+						rownumbers: true,
+						checkbox: false,
+						height: '100%',
+						width: "100%",
+						pageSize: 10,
+						percentWidthMode: true,
+						onAfterShowData: onAfterShowData
 
-			});
-			grid2 = $("#dataBasic2").quiGrid({
-				columns: [{
-					display: '编号',
-					name: 'id',
-					width: "40%",
-					cellClick: true
-				}, {
-					display: '名字',
-					name: 'person',
-					width: "60%"
+					});
 				}
-				],
-				data: gridData,
-				sortName: 'id',
-				rownumbers: false,
-				checkbox: false,
-				height: '100%',
-				width: "100%",
-				pageSize: 10,
-				percentWidthMode: true,
-				onAfterShowData: onAfterShowData
+					break;
+				case 2: {
+					console.log(gridData);
+					grid = $("#dataSmsRecv").quiGrid({
+						columns: [{
+							display: '日期',
+							name: 'date',
+							width: "15%"
+						}, {
+							display: '电话',
+							name: 'phoneNo',
+							width: "15%"
+						}, {
+							display: '信息',
+							name: 'msg',
+							width: "70%"
+						}
+						],
+						data: gridData,
+						sortName: 'date',
+						rownumbers: true,
+						checkbox: false,
+						height: '100%',
+						width: "100%",
+						pageSize: 10,
+						percentWidthMode: true,
+						onAfterShowData: onAfterShowData
 
-			});
+					});
+				}
+					break;
+				case 3: {
+					grid = $("#dataSmsSend").quiGrid({
+						columns: [{
+							display: '日期',
+							name: 'date',
+							width: "15%"
+						}, {
+							display: '电话',
+							name: 'phoneNo',
+							width: "15%"
+						}, {
+							display: '信息',
+							name: 'msg',
+							width: "70%"
+						}
+						],
+						data: gridData,
+						sortName: 'date',
+						rownumbers: true,
+						checkbox: false,
+						height: '100%',
+						width: "100%",
+						pageSize: 10,
+						percentWidthMode: true,
+						onAfterShowData: onAfterShowData
+
+					});
+				}
+					break;
+				case 4: {
+					grid = $("#dataLocation").quiGrid({
+						columns: [{
+							display: '编号',
+							name: 'id',
+							width: "40%"
+						}, {
+							display: '电话',
+							name: 'tel',
+							width: "60%"
+						}
+						],
+						data: gridData,
+						sortName: 'id',
+						rownumbers: false,
+						checkbox: false,
+						height: '100%',
+						width: "100%",
+						pageSize: 10,
+						percentWidthMode: true,
+						onAfterShowData: onAfterShowData
+
+					});
+				}
+					break;
+
+			}
+
 		}
+
 		function getData(col) {
 			$.ajaxSettings.async = false;
-			var dsturl = "http://127.0.0.1/phonesystem/backend/getdata.php" + url + "&col=" + col;
+			var dsturl = "http://127.0.0.1/phonesystem/backend/getdata.php" + deviceid + "&col=" + col;
 			console.log(dsturl);
-			$.get(dsturl, {
-
-			},
+			$.get(dsturl, {},
 				function (data, textStatus) {
-					console.log(typeof data);
-					// console.log(data);
+					//console.log(data);
 					var data = JSON.parse(data)
 					// console.log(typeof data);
 					console.log(data);
@@ -216,6 +366,7 @@
 					}
 				});
 		}
+
 
 		function onAfterShowData(data) {
 
