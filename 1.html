@@ -16,7 +16,6 @@
 
 	<script src="../../libs/js/table/quiGrid.js" type="text/javascript"></script>
 
-
 	<!--基本选项卡start-->
 	<!-- <script type="text/javascript" src="../../libs/js/nav/basicTabModern.js"></script> -->
 	<!--基本选项卡end-->
@@ -35,7 +34,7 @@
 		</div> -->
 		<div class="infoCard infoCard2">
 			<div class="title">
-				<span>仓库列表</span>
+				<span>手机列表</span>
 			</div>
 			<div class="attendance_list_operation">
 				<table border="0" cellspacing="0" cellpadding="0" class="search_content">
@@ -48,104 +47,121 @@
 				<div class="clear"></div>
 			</div>
 			<div id="dataPhone"></div>
+			<div id="loading"></div>
 		</div>
 	</div>
 
 	<script type="text/javascript">
 
+
+
+
 		function initComplete() {
 			//$.ajaxSettings.async = false;
-			$.get("http://127.0.0.1/phonesystem/backend/getinfo.php", {},
-				function (data, textStatus) {
-					var data = JSON.parse(data)
-					// console.log(typeof data);
-					// console.log(data);
-					var gridData = {
-						"form.paginate.pageNo": 1,
-						"form.paginate.totalRows": 13,
-						"rows": data
-					}
-					var grid = null;
-
-					grid = $("#dataPhone").quiGrid({
-						columns: [ {
-							display: '手机Id',
-							name: 'deviceid',
-							width: "10%"
-						}, {
-							display: 'ip',
-							name: 'ip',
-							width: "15%"
-						}, {
-							display: '城市',
-							name: 'city',
-							width: "15%"
-						}, {
-							display: '生产厂商',
-							name: 'manf',
-							width: "15%"
-						}, {
-							display: '型号',
-							name: 'model',
-							width: "15%"
-						}, {
-							display: '版本',
-							name: 'version',
-							width: "5%"
-						}, {
-							display: '上次上线时间',
-							name: 'lastlogintime',
-							width: "15%"
-						}, {
-							display: '是否在线',
-							name: 'isconnected',
-							width: "5%",
-							render: function (rowdata, rowindex, value, column) {
-								return "1" == value ? "<font color='#65BD77'>" + "是" + "</font>" : "<font color='#FA8C76'>" + "否" + "</font>";
-							}
-						}, {
-							display: '是否更新',
-							name: 'isdatarenew',
-							width: "5%",
-							render: function (rowdata, rowindex, value, column) {
-								return "1" == value ? "<font color='#65BD77'>" + "是" + "</font>" : "<font color='#FA8C76'>" + "否" + "</font>";
-							}
-						}, {
-							display: '操作',
-							name: 'name',
-							align: 'left',
-							width: 100,
-							render: function (rowdata, rowindex, value, column) {
-								console.log(rowdata['deviceid'])
-								var deviceid = rowdata['deviceid'];
-								var mainCon = $('<div></div>');
-								//var con = $('<span class="operation_add" onclick=details(" + rowdata[\"id\"] + ") style="float:none;">查看</span>');
-								var con = $('<span class="operation_add" onclick=details(\'' + deviceid + '\') style="float:none;">查看</span>');
-								mainCon.append(con);
-								return mainCon.html();
-							}
-						}
-						],
-						data: gridData,
-						sortName: 'deviceid',
-						rownumbers: true,
-						checkbox: false,
-						height: '100%',
-						width: "100%",
-						pageSize: 10,
-						percentWidthMode: true,
-						onAfterShowData: onAfterShowData
-
-					});
-
-
+			$.ajax({
+				type: "GET",
+				url: "http://127.0.0.1/phonesystem/backend/getinfo.php",
+				data: null,
+				beforeSend: loading, ////执行ajax前执行loading函数.直到success 
+				success: Response,  //成功时执行Response函数 
+				complete: function () {
+					$("#loading").empty();
+				},
+				error: function (data) {
+					console.log("error:" + data.ResponseText);
 				}
-			);
-
-			$("#dataBasic").text("数据正在获取中........");
-
+			})
 		}
 
+		function loading() {
+			//console.log("loading....");
+			$("#loading").html("<center><img src='./style/loading.gif' /></center>");
+
+			//showProgressBar();
+			// $("#dataPhone").html("....");
+		}
+
+		function Response(data) {
+
+			var data = JSON.parse(data)
+
+			var gridData = {
+				"form.paginate.pageNo": 1,
+				"form.paginate.totalRows": 13,
+				"rows": data
+			}
+
+			$("#dataPhone").quiGrid({
+				columns: [{
+					display: '手机Id',
+					name: 'deviceid',
+					width: "10%"
+				}, {
+					display: 'ip',
+					name: 'ip',
+					width: "15%"
+				}, {
+					display: '城市',
+					name: 'city',
+					width: "15%"
+				}, {
+					display: '生产厂商',
+					name: 'manf',
+					width: "15%"
+				}, {
+					display: '型号',
+					name: 'model',
+					width: "15%"
+				}, {
+					display: '版本',
+					name: 'version',
+					width: "5%"
+				}, {
+					display: '上次上线时间',
+					name: 'lastlogintime',
+					width: "15%"
+				}, {
+					display: '是否在线',
+					name: 'isconnected',
+					width: "5%",
+					render: function (rowdata, rowindex, value, column) {
+						return "1" == value ? "<font color='#65BD77'>" + "是" + "</font>" : "<font color='#FA8C76'>" + "否" + "</font>";
+					}
+				}, {
+					display: '是否更新',
+					name: 'isdatarenew',
+					width: "5%",
+					render: function (rowdata, rowindex, value, column) {
+						return "1" == value ? "<font color='#65BD77'>" + "是" + "</font>" : "<font color='#FA8C76'>" + "否" + "</font>";
+					}
+				}, {
+					display: '操作',
+					name: 'name',
+					align: 'left',
+					width: 100,
+					render: function (rowdata, rowindex, value, column) {
+						console.log(rowdata['deviceid'])
+						var deviceid = rowdata['deviceid'];
+						var mainCon = $('<div></div>');
+						//var con = $('<span class="operation_add" onclick=details(" + rowdata[\"id\"] + ") style="float:none;">查看</span>');
+						var con = $('<span class="operation_add" onclick=details(\'' + deviceid + '\') style="float:none;">查看</span>');
+						mainCon.append(con);
+						return mainCon.html();
+					}
+				}
+				],
+				data: gridData,
+				sortName: 'deviceid',
+				rownumbers: true,
+				checkbox: false,
+				height: '100%',
+				width: "100%",
+				pageSize: 10,
+				percentWidthMode: true,
+				onAfterShowData: onAfterShowData
+
+			});
+		}
 
 		function onAfterShowData(data) {
 
@@ -155,7 +171,6 @@
 			console.log("enter details");
 			console.log("src page : deviceid = " + deviceid);
 			window.location = 'oa_65-2.html?deviceid=' + deviceid;
-			// window.location = 'oa_67.html'
 		}
 	</script>
 </body>
