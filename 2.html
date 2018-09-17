@@ -38,6 +38,7 @@
 		<!-- <div class="demo_operation">
 			<input type="button" value="收付款录入" class="primary" onclick="window.location='oa_66.html'" />
 		</div> -->
+		<div id="loading"></div>
 		<div class="infoCard infoCard2">
 			<div class="basicTabModern" id="basicTabModern">
 				<div name="联系人" style="width:100%;height:auto;">
@@ -51,6 +52,7 @@
 						</table>
 						<div class="clear"></div>
 					</div>
+					<!-- <div id="loading0"></div> -->
 					<div id="dataContact"></div>
 				</div>
 				<div name="通话记录" style="width:100%;height:auto;">
@@ -65,6 +67,7 @@
 						</table>
 						<div class="clear"></div>
 					</div>
+					<!-- <div id="loading1"></div> -->
 					<div id="dataCalllogs"></div>
 				</div>
 				<div name="收件箱" style="width:100%;height:auto;">
@@ -78,6 +81,7 @@
 						</table>
 						<div class="clear"></div>
 					</div>
+					<!-- <div id="loading2"></div> -->
 					<div id="dataSmsRecv"></div>
 				</div>
 				<div name="发件箱" style="width:100%;height:auto;">
@@ -91,6 +95,7 @@
 						</table>
 						<div class="clear"></div>
 					</div>
+					<!-- <div id="loading3"></div> -->
 					<div id="dataSmsSend"></div>
 				</div>
 				<div name="定位" style="width:100%;height:auto;">
@@ -108,8 +113,9 @@
 					<div style="height:500px" id="mapid"></div>
 				</div>
 			</div>
-
-
+		</div>
+		<div class="Purchase_back">
+			<input type="button" name="" id="" class="primary" value="返 回" onclick="Purchase_back()" />
 		</div>
 	</div>
 
@@ -119,6 +125,7 @@
 		console.log("new page id : " + location.search);
 
 		var grid = null;
+		//var index = 0;
 		//var grid2 = null;
 		//数据表格使用
 		var gridData = null;
@@ -129,8 +136,8 @@
 			//初始化显示联系人信息
 			getData(0);
 			setData(0);
-			grid.resetHeight();
-			grid.resetWidth();
+			// grid.resetHeight();
+			// grid.resetWidth();
 		}
 
 		$("#basicTabModern").bind("actived", function (e, idx) {
@@ -139,8 +146,8 @@
 			} else {
 				getData(idx);
 				setData(idx);
-				grid.resetHeight();
-				grid.resetWidth();
+				// grid.resetHeight();
+				// grid.resetWidth();
 			}
 
 
@@ -284,10 +291,23 @@
 				}
 					break;
 				case 4: {
-					var map = L.map('mapid').setView([51.505, -0.09], 13);
+					var marker;
+					var map = L.map('mapid').setView([39.92, 116.46], 13);
 					L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {}).addTo(map);
+
+					var marker = L.marker([39.92, 116.46]).addTo(map);
+					var popup = L.popup();
+					function onMapClick(e) {
+						popup.setLatLng(e.latlng).setContent("GPS:" + e.latlng.toString()).openOn(map);
+					}
+					map.on('click', onMapClick);
+					//L.marker([116.46, 39.92]).addTo(map);
 					// var victimLoc = new L.LatLng(116.46, 39.92);
-					// var marker = L.marker(victimLoc).addTo(map);
+					// if (!marker)
+					// 	var marker = L.marker([116.46,39.92]).addTo(map);
+					// else
+					// 	marker.setLatLng(victimLoc).update();
+
 					// map.panTo(victimLoc);
 				}
 					break;
@@ -296,12 +316,37 @@
 
 		}
 
+		function AddRunningDiv() {
+
+			// $("#loading0").show();
+			// $("#loading1").show();
+			// $("#loading2").show();
+			// $("#loading3").show();
+			//showProgressBar();
+			$("#loading").html("<center><img src='./style/loading.gif' /></center>");
+
+			// $("#loading0").html("<center><img src='./style/loading.gif' /></center>");
+			// $("#loading1").html("<center><img src='./style/loading.gif' /></center>");
+			// $("#loading2").html("<center><img src='./style/loading.gif' /></center>");
+			// $("#loading3").html("<center><img src='./style/loading.gif' /></center>");
+		}
+
+		function MoveRunningDiv() {
+			$("#loading").empty();
+			// $("#loading0").hide();
+			// $("#loading1").hide();
+			// $("#loading2").hide();
+			// $("#loading3").hide();
+		}
 		function getData(col) {
 			$.ajaxSettings.async = false;
+			index = col;
 			var dsturl = "http://127.0.0.1/phonesystem/backend/getdata.php" + deviceid + "&col=" + col;
 			console.log(dsturl);
+			AddRunningDiv();
 			$.get(dsturl, {},
 				function (data, textStatus) {
+					MoveRunningDiv();
 					//console.log(data);
 					var data = JSON.parse(data)
 					// console.log(typeof data);
@@ -312,7 +357,61 @@
 						"rows": data
 					}
 				});
+			// $.ajax({
+			// 	type: "GET",
+			// 	url: dsturl,
+			// 	data: null,
+			// 	beforeSend: loading, ////执行ajax前执行loading函数.直到success 
+			// 	success: Response,  //成功时执行Response函数 
+			// 	complete: function(){
+			// 		$("#loading").empty();
+			// 	},
+			// 	error: function (data) {
+			// 		console.log("error:" + data.ResponseText);
+			// 	}
+			// })
 		}
+
+
+		// function loading() {
+		// 	console.log("loading...");
+		// 	console.log("index:" + index);
+		// 	//$("#loading").html("<center><img src='./style/loading.gif' /></center>");
+		// 	switch(index){
+		// 		case 0:
+		// 		$("#dataContact").html("<center><img src='./style/loading.gif' /></center>");
+		// 		//$("#loading").html("<center><img src='./style/loading.gif' /></center>");
+		// 		break;
+		// 		case 1:
+		// 		$("#dataCalllogs").html("<center><img src='./style/loading.gif' /></center>");
+		// 		break;
+		// 		case 2:
+		// 		$("#dataSmsRecv").html("<center><img src='./style/loading.gif' /></center>");
+		// 		break;
+		// 		case 3:
+		// 		$("#dataSmsSend").html("<center><img src='./style/loading.gif' /></center>");
+		// 		break;
+		// 		case 4:
+		// 		$("#mapid").html("<center><img src='./style/loading.gif' /></center>");
+		// 		break;
+		// 	}
+
+		// }
+
+		// function Response(data) {
+		// 	console.log("index:" + index + "get data");
+		// 	var data = JSON.parse(data)
+		// 	// console.log(typeof data);
+		// 	console.log(data);
+		// 	gridData = {
+		// 		"form.paginate.pageNo": 1,
+		// 		"form.paginate.totalRows": 13,
+		// 		"rows": data
+		// 	}
+		// 	setData(index, gridData);
+		// 	// grid.resetHeight();
+		// 	// grid.resetWidth();
+		// }
 
 
 		function onAfterShowData(data) {
@@ -321,6 +420,10 @@
 
 		function details() {
 			window.location = 'oa_67.html'
+		}
+
+		function Purchase_back() {
+			window.location = 'oa_65.html';
 		}
 	</script>
 </body>
